@@ -31,13 +31,16 @@ int main(){
 	close(c_socket); //자원 회수
 	return -1; // 프로세스 종료
 	}
-	fgets(mes,sizeof(mes),stdin); //키보드로 문자열입력받
-	write(c_socket,mes,strlen(mes)); //서버로 입력한 메세지 보내기
-	//4. 서버에서 보낸 메세지 읽기
-	//서버에서 보내준 메세지를 rcvBuffer에 저장하고, 메세지의 길이를 n에 저장
-	//만약 read에 실패하면 -1을리턴
-	
-	n=read(c_socket,rcvBuffer,sizeof(rcvBuffer)); //서버로부터 받은 메세지 n에저장
+while(1){
+		fgets(mes,sizeof(mes),stdin); //키보드로 문자열입력받
+		write(c_socket,mes,strlen(mes)); //서버로 입력한 메세지 보내기
+		//4. 서버에서 보낸 메세지 읽기
+		//서버에서 보내준 메세지를 rcvBuffer에 저장하고, 메세지의 길이를 n에 저장
+		//만약 read에 실패하면 -1을리턴
+		if(strncasecmp(mes,"quit",4) == 0 || strncasecmp(mes,"kill server",11) == 0) 
+			break;
+		n=read(c_socket,rcvBuffer,sizeof(rcvBuffer)); //서버로부터 받은 메세지 n에저장
+		
 	if(n<0){ //read() 함수실패
 	printf("Read Failed\n");
 	return -1;
@@ -45,6 +48,8 @@ int main(){
 
 	rcvBuffer[n]='\0';
 	printf("received data: %s\n",rcvBuffer); //서버에서 받은 메세지 출력
+	printf("rcvBuffer length: %d\n",n);
+}
 	close(c_socket);
 	return 0;
 }
