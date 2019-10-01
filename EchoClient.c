@@ -22,7 +22,7 @@ int main(){
 	c_addr.sin_family = AF_INET;
 	c_addr.sin_port = htons(PORT);
 	
-	fgets(mes,100,stdin); //키보드로 문자열입력받
+	
 	
 	//3.서버에 접속
 	if(connect(c_socket,(struct sockaddr *)&c_addr, sizeof(c_addr))==-1){
@@ -31,6 +31,7 @@ int main(){
 	close(c_socket); //자원 회수
 	return -1; // 프로세스 종료
 	}
+	fgets(mes,sizeof(mes),stdin); //키보드로 문자열입력받
 	write(c_socket,mes,strlen(mes)); //서버로 입력한 메세지 보내기
 	//4. 서버에서 보낸 메세지 읽기
 	//서버에서 보내준 메세지를 rcvBuffer에 저장하고, 메세지의 길이를 n에 저장
