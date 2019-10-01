@@ -47,6 +47,7 @@ int main(){
 		printf("클라이언트 접속 허용\n");
 	while(1){
 			n=read(c_socket,rcvBuffer,sizeof(rcvBuffer));
+			rcvBuffer[n] ='\0';
 			printf("rcvBuffer :%s\n",rcvBuffer);
 			if(strncasecmp(rcvBuffer,"quit",4) == 0 || strncasecmp(rcvBuffer,"kill server",11) == 0)
 				break;
