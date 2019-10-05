@@ -5,14 +5,18 @@
 
 #define PORT 10001
 #define BUFSIZE 100
-char buffer[100]="Hi, i'm server";
-char rcvBuffer[100];
+char rcvBuffer[BUFSIZE];
+char Buffer[BUFSIZE];
+char Buffer2[BUFSIZE];
+char cmpBuffer[2][BUFSIZE];
+char *tok;
 int main(){
 	int c_socket, s_socket;
 	struct sockaddr_in s_addr, c_addr;
 	int len;
 	int n;
-	char rcvBuffer[BUFSIZE];
+	int readSize;
+	int count=0;
 	// 1. 서버 소켓 생성
 	//서버 소켓 = 클라이언트의 접속 요청을 처리(허용)해 주기 위한 소켓
 	s_socket = socket(PF_INET, SOCK_STREAM, 0); //TCP/IP 통신을 위한 서버 소켓 생성
@@ -42,22 +46,64 @@ int main(){
 		len = sizeof(c_addr);
 		printf("클라이언트 접속을 기다리는 중....\n");
 		c_socket = accept(s_socket, (struct sockaddr *)&c_addr, &len); 
-		//클라이언트의 요청이 오면 허용(accept)해 주고, 해당 클라이언트와 통신할 수 있도록 클라이언트 소켓(c_socket)을 반환함.
 		printf("/client is connected\n");
-		printf("클라이언트 접속 허용\n");
 	while(1){
-			n=read(c_socket,rcvBuffer,sizeof(rcvBuffer));
-			rcvBuffer[n] ='\0';
-			printf("rcvBuffer :%s\n",rcvBuffer);
-			if(strncasecmp(rcvBuffer,"quit",4) == 0 || strncasecmp(rcvBuffer,"kill server",11) == 0)
-				break;
-			write(c_socket, rcvBuffer, n); //클라이언트에게 buffer의 내용을 전송함r
-		}		
-		close(c_socket);
-	if(strncasecmp(rcvBuffer,"kill server",11) == 0) 
-	break;
+			memset(rcvBuffer,0,BUFSIZE);
+			memset(Buffer,0,BUFSIZE);
+			memset(Buffer2,0,BUFSIZE);
+			if((readSize=read(c_socket,rcvBuffer,sizeof(rcvBuffer)))<0){
+				return -1;
+			}
+		
+			printf("rcvBuffer : %s\n",rcvBuffer);
+			if(strncmp(rcvBuffer,"quit",4)==0){
+			break;
+			}
+			else if(strcasecmp(rcvBuffer,"Hello") == 0){
+			strcpy(Buffer,"Hi NICE MEET YOU");
+			}
+			else if(strcasecmp(rcvBuffer,"What your name?")== 0){
+			strcpy(Buffer,"My name is Kim Jong Heon");
+			}
+			else if(strcasecmp(rcvBuffer,"How old are you")== 0){
+			strcpy(Buffer,"i'm 23");
+			}
+			else if(strncmp(rcvBuffer,"strlen",6)== 0){ //문자열비교
+					tok=strtok(rcvBuffer," ");
+					while(tok != NULL) {
+					tok=strtok(NULL," ");
+					if(tok != NULL){
+					strcpy(Buffer2,tok);
+					sprintf(Buffer,"<%s> len : %d",Buffer2,strlen(Buffer2));
+					}
+			}
+			}
+			else if(strncmp(rcvBuffer,"strcmp",6)== 0){
+					count=0;
+					tok = strtok(rcvBuffer," ");
+		
+					if(tok != NULL){
+						while(tok != NULL){
+							tok = strtok(NULL," ");
+							if(tok != NULL){
+								strcpy(cmpBuffer[count],tok);
+									count++;
+							}
+						}
+					}
+			if(strcmp(cmpBuffer[0],cmpBuffer[1]) == 0){
+					strcpy(Buffer,"0");
+			}else{
+					strcpy(Buffer,"1");
+			}
+		}
+				n = strlen(Buffer);
+				write(c_socket,Buffer,n);
+			printf("send Data: %s\n",Buffer);
+		
 	}
-	close(s_socket);
-	return 0;	
+		close(c_socket);
+	}
+	close(s_socket);	
 }
 
