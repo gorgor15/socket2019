@@ -39,8 +39,10 @@ while(1){
 		printf("<%s> is sent\n",mes);
 		if(strncasecmp(mes,"quit",4) == 0) 
 			break;
-		if(n=read(c_socket,rcvBuffer,sizeof(rcvBuffer))<0){ //서버로부터 받은 메세지 n에저장
-				return (-1);
+		n=read(c_socket,rcvBuffer,sizeof(rcvBuffer)); //서버로부터 받은 메세지 n에저장
+		if(n<0){
+			printf("read Failed\n");
+			return -1;
 		}
 
 	rcvBuffer[n]='\0';
