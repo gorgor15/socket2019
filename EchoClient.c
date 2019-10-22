@@ -44,7 +44,6 @@ while(1){
 			printf("read Failed\n");
 			return -1;
 		}
-
 	rcvBuffer[n]='\0';
 	printf("received data: %s\n",rcvBuffer); //서버에서 받은 메세지 출력
 	printf("rcvBuffer length: %d\n",n);
