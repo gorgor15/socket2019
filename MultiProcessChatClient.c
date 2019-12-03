@@ -31,7 +31,7 @@ int main(int argc, char *argv[ ])
     c_addr.sin_addr.s_addr = inet_addr(IPADDR);
     c_addr.sin_family = AF_INET;
     c_addr.sin_port = htons(PORT);
-    printf("Input Nickname : ");
+    printf("이름을 입력해주세요: ");
     scanf("%s", nickname);
     if(connect(c_socket, (struct sockaddr *) &c_addr, sizeof(c_addr)) == -1) {
         printf("Can not connect\n");

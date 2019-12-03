@@ -100,7 +100,7 @@ void *do_chat(void *arg)
 			else if(strncasecmp(chatData,"/join",5)==0){
 					strtok(chatData," ");
 					strcpy(room,strtok(NULL,"\0"));
-					sprintf(writeData,"[%s] %s room\n",nickname,room);
+					sprintf(writeData,"[%s] %s방\n",nickname,room);
 					for(i=0;i<MAX_CLIENT;i++){  
 							if(list_c[i].c_socket==c_socket){
 								strcpy(list_c[i].room,room);
@@ -141,7 +141,7 @@ int pushClient(int c_socket) {
 			strcpy(list_c[i].nickname,s);
 			memset(list_c[i].room,0,sizeof(list_c[i].room));
 			strcpy(list_c[i].room,"all");
-			sprintf(writeData,"[%s] 채팅방 access\n",s);
+			sprintf(writeData,"[%s] 채팅방 접속\n",s);
 			for(i=0;i<MAX_CLIENT;i++){
 				if(list_c[i].c_socket==INVALID_SOCK){
 				write(list_c[i].c_socket,writeData,strlen(writeData));
@@ -160,7 +160,7 @@ int popClient(int c_socket)
 	char writeData[CHATDATA];
 	for(i=0;i<MAX_CLIENT;i++){
 		if(list_c[i].c_socket==c_socket){
-			sprintf(writeData,"[%s] 채팅방 get out\n",list_c[i].nickname);
+			sprintf(writeData,"[%s] 채팅방 나가기\n",list_c[i].nickname);
 			for(j=0;i<MAX_CLIENT;j++){
 				if(list_c[j].c_socket!=INVALID_SOCK){
 					write(list_c[j].c_socket,writeData,strlen(writeData));
